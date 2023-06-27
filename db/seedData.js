@@ -2,8 +2,8 @@
 const client = require("./client");
 
 const{createNewReviews, fetchAllReviews, fetchReviewById, updateReviewById,deleteReviewById} = require("./reviews");
-
-async function createTable(){
+const {createNewUser} = require("./users")
+async function createTableReviews(){
     try {
         await client.query(`
         CREATE TABLE reviews(
@@ -16,7 +16,35 @@ async function createTable(){
         )
         `)
     } catch (error) {
-        console.log("createTable error seed.js:5-20", error)
+        console.log("createTableReviews error seed.js", error)
+    }
+}
+async function dropUserTable(){
+    try {
+        console.log("starting to drop tables")
+            await client.query(`
+            DROP TABLE IF EXISTS users
+            `)
+        console.log("finished droping tables")
+    } catch (error) {
+        
+    }
+}
+async function createTableUsers(){
+    console.log("started creating users table")
+    try {
+        await client.query(`
+        CREATE TABLE users(
+            "userId" SERIAL PRIMARY KEY,
+            "firstName" VARCHAR(255) NOT NULL,
+            "lastName" VARCHAR(225) NOT NULL,
+            username VARCHAR(255) NOT NULL UNIQUE,
+            "password" VARCHAR(15) NOT NULL
+        )
+        `)
+        console.log("finished creating users table")
+    } catch (error) {
+        console.log("error creating user table seed.js", error)
     }
 }
 
@@ -37,7 +65,9 @@ async function buildOutTheDatabase(){
         client.connect();
 
         await theBigRedButtonOfDoom();
-        await createTable();
+        await createTableReviews();
+        await dropUserTable()
+        await createTableUsers()
 
         console.log(" got to the seed data")
 
@@ -63,11 +93,30 @@ async function buildOutTheDatabase(){
             review: "everyone's children where traumatized because i hadn't worked on my bakini bod",
             rating: 3
         })
-
-
-       
+        console.log(" got through the reviews ")
+            // USER SEED DATA
+            const firstUser = await createNewUser({
+                firstName: "aldolfo",
+                lastName: "freddy",
+                username: "aldofreddy",
+                password: "password1"
+            })
+            const firstUser1 = await createNewUser({
+                firstName: "aldolfo",
+                lastName: "freddy",
+                username: "aldofreddy1",
+                password: "password1"
+            })
+            const firstUser2 = await createNewUser({
+                firstName: "aldolfo",
+                lastName: "freddy",
+                username: "aldofreddy2",
+                password: "password1"
+            })
+            console.log("got through the users")
+      
     } catch (error) {
-        console.log(" buildOutTheDatabase error seed.js:end", error)
+        console.log(" buildOutTheDatabase error seedData.js:end", error)
     }
 
 }

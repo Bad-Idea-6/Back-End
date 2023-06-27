@@ -3,7 +3,7 @@ const pg = require("pg");
 
 const connectionString = process.env.DATABASE_URL || 'https://localhost:5432/bad_idea';
 
-const client = new pg.Client({
+const client = new pg.Pool({
   connectionString,
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
 });
