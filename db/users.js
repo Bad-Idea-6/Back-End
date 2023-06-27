@@ -2,7 +2,7 @@ const client = require("./client")
 
 async function createNewUser( {firstName, lastName, username, password}){
 try {
-    const{rows} = client.query(`
+    const{rows} = await client.query(`
     INSERT INTO users( "firstName", "lastName", username, password)
     VALUES ($1, $2, $3, $4)
     RETURNING *;`
