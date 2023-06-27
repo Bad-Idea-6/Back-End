@@ -1,8 +1,7 @@
-const express require("express");
-
+const express = require("express");
+const PORT = 8080;
 const app = express();
 
-const {createNewReviews, fetchAllReviews, fetchReviewById, updateReviewById,deleteReviewById} = require("./db/seed")
 
 function myFirstMiddleware(req, res, next) {
     console.log("We have received a request")
@@ -10,43 +9,21 @@ function myFirstMiddleware(req, res, next) {
     next(); 
  }
  app.use(myFirstMiddleware)
- 
+
+ const morgan = require("morgan");
+app.use(morgan("dev"));
+
+const cors = require("cors");
+app.use(cors());
+
  app.use(express.json());
 
 
-async function getAllBooks(req, res, next) {
-    try {
-        const theActualBookData = await fetchAllBooks(); 
 
-        if (theActualBookData.length) {
-            res.send(theActualBookData)
-        } else {
-            res.send("No books available...")
-        }
-    } catch (error) {
-        console.log(error); 
-    }
-}
-app.get("/books", getAllBooks)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- const client = require("./db/index")
+ const client = require("./db/client")
  client.connect();
 
- app.listen(3000, () => {
-    console.log("We are now connected to port 3000.")
+
+ app.listen(PORT, () => {
+    console.log(`We are now connected to port ${PORT}.`)
 })
