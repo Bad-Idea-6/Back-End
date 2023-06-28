@@ -13,7 +13,7 @@ async function createTableReviews(){
             author VARCHAR(225) DEFAULT 'anonymous',
             review TEXT DEFAULT 'review TBD',
             rating INT NOT NULL 
-        )
+        );
         `)
     } catch (error) {
         console.log("createTableReviews error seed.js", error)
@@ -23,7 +23,7 @@ async function dropUserTable(){
     try {
         console.log("starting to drop tables")
             await client.query(`
-            DROP TABLE IF EXISTS users
+            DROP TABLE IF EXISTS users;
             `)
         console.log("finished droping tables")
     } catch (error) {
@@ -40,7 +40,7 @@ async function createTableUsers(){
             "lastName" VARCHAR(225) NOT NULL,
             username VARCHAR(255) NOT NULL UNIQUE,
             "password" VARCHAR(15) NOT NULL
-        )
+        );
         `)
         console.log("finished creating users table")
     } catch (error) {
@@ -51,7 +51,7 @@ async function createTableUsers(){
 async function theBigRedButtonOfDoom(){
     try {
         await client.query(`
-        DROP TABLE IF EXISTS reviews
+        DROP TABLE IF EXISTS reviews;
         `)
     } catch (error) {
         console.log("destroy table error seed.js:22-30", error)
@@ -64,9 +64,9 @@ async function buildOutTheDatabase(){
     try {
         client.connect();
 
+        await dropUserTable()
         await theBigRedButtonOfDoom();
         await createTableReviews();
-        await dropUserTable()
         await createTableUsers()
 
         console.log(" got to the seed data")
@@ -101,6 +101,8 @@ async function buildOutTheDatabase(){
                 username: "aldofreddy",
                 password: "password1"
             })
+            
+            console.log(firstUser)
             const firstUser1 = await createNewUser({
                 firstName: "aldolfo",
                 lastName: "freddy",
