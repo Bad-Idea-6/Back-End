@@ -6,6 +6,7 @@ router.get('/health', (request, response)=>{
 })
 
 router.use('/reviews', require('./reviews'))
+router.use('/user', require('./user'))
 
 
 
