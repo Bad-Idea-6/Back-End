@@ -1,6 +1,7 @@
 const express = require("express");
 const reviewsRouter = express.Router();
 const { fetchAllReviews } = require("../db/reviews");
+const {createNewReviews} = require("../db/reviews")
 
 reviewsRouter.get("/", async (request, response) => {
   try {
@@ -20,15 +21,21 @@ reviewsRouter.get("/", async (request, response) => {
 });
 
 reviewsRouter.post("/post", async (req, res)=>{
-  consol.log(" entered into reviews Router", req)
-try {
-  const {rows} = await client.query(`
-  INSERT INTO reviews("ideaName", title, author, review, rating)
-  VALUES ($1, $2, $3, $4, $5)
-  RETURNING *;`
-  ,[reviewObj.ideaName, reviewObj.title, reviewObj.author, reviewObj.review, reviewObj.rating])
-
-  return rows
+  console.log(" entered into reviews Router", req)
+  const token = req
+  console.log(token) 
+  const {ideaName, title, author, review, rating} = req.body
+  try {
+ const newReview = createNewReviews({
+  ideaName, 
+  title, 
+  author, 
+  review,
+   rating
+  })
+res.send({
+  message: "you posted something successfully"
+})
   
 } catch (error) {
   console.log("error posting to the Reviews table", error)

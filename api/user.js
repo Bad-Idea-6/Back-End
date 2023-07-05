@@ -9,15 +9,16 @@ const { findUserByUsername } = require("../db/userFinder");
 
 usersRouter.post("/register", async (req, res) => {
   const { firstName, lastName, username, password } = req.body;
-
+  
   try {
     //? this below checks if the username already exists
-    // const _user = await getUserByUserName()
+    const _user = await findUserByUsername(username)
+  if (!_user){  
     const user = await createNewUser({
       firstName,
       lastName,
       username,
-      password,
+      password
     });
     const token = jwt.sign(
       {
@@ -30,20 +31,22 @@ usersRouter.post("/register", async (req, res) => {
     res.send({
       message: "Thank you for joining the Bad Idea Cult.",
       token,
-    });
+    });}
+    else{
+      res.send("username already un use. please try again ")
+    }
   } catch (error) {
     console.log("error registering new user", error);
   }
 });
 
+
 // TODO: LOGIN AN EXISTING USER
-usersRouter.post("/login", async (req, res) => {
+usersRouter.get("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
-    console.log(req.body)
-    console.log(process.env.JWT_SECRET)
     const testedUsername = await findUserByUsername(username);
-    console.log("test 2",testedUsername)
+    // console.log("test 2",testedUsername)
     if (
       testedUsername.username == username &&
       testedUsername.password == password

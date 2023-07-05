@@ -1,5 +1,6 @@
 
 const client = require("./client");
+require('dotenv').config();
 
 const{createNewReviews, fetchAllReviews, fetchReviewById, updateReviewById,deleteReviewById} = require("./reviews");
 const {createNewUser} = require("./users")
@@ -39,7 +40,9 @@ async function createTableUsers(){
             "firstName" VARCHAR(255) NOT NULL,
             "lastName" VARCHAR(225) NOT NULL,
             username VARCHAR(255) NOT NULL UNIQUE,
-            "password" VARCHAR(15) NOT NULL
+            "password" VARCHAR(15) NOT NULL,
+            email VARCHAR(225),
+            "is_admin" BOOLEAN 
         );
         `)
         console.log("finished creating users table")
@@ -95,6 +98,10 @@ async function buildOutTheDatabase(){
         })
         console.log(" got through the reviews ")
             // USER SEED DATA
+            const [firstName, lastName, username, password, is_admin] = process.env.admin.split(",")
+            console.log(firstName, lastName, username, password, is_admin, "@@@@@")
+            const admin = await createNewUser({firstName, lastName, username, password, is_admin})
+            
             const firstUser = await createNewUser({
                 firstName: "aldolfo",
                 lastName: "freddy",
