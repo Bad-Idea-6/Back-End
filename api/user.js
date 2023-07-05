@@ -37,11 +37,13 @@ usersRouter.post("/register", async (req, res) => {
 });
 
 // TODO: LOGIN AN EXISTING USER
-usersRouter.get("/login", async (req, res) => {
+usersRouter.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
+    console.log(req.body)
+    console.log(process.env.JWT_SECRET)
     const testedUsername = await findUserByUsername(username);
-    // console.log("test 2",testedUsername)
+    console.log("test 2",testedUsername)
     if (
       testedUsername.username == username &&
       testedUsername.password == password
