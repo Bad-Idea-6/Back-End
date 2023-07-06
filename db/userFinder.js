@@ -22,7 +22,7 @@ async function findUserById(idValue) {
     const { rows } = await client.query(
       `
             SELECT * FROM users
-            WHERE "id" = $1;
+            WHERE "userId" = $1;
         `,
       [idValue]
     );

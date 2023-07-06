@@ -82,14 +82,11 @@ usersRouter.post("/login", async (req, res) => {
 });
 
 usersRouter.post("/profile", async(req, res)=>{
-  console.log("entered into profile")
   try {
-    console.log(id)
     const {id} = req.body;
-    const user = findUserById(id)
+    const user = await findUserById(id)
     console.log(user)
     if (user){
-      console.log("well that worked ish???")
       res.send(
         user
       )
