@@ -14,8 +14,23 @@ async function findUserByUsername(userNameValue) {
 
     return rows[0];
   } catch (error) {
-    console.log("userFinder ERROR", error);
+    console.log("userFinderByUsername ERROR", error);
+  }
+}
+async function findUserById(idValue) {
+  try {
+    const { rows } = await client.query(
+      `
+            SELECT * FROM users
+            WHERE "userId" = $1;
+        `,
+      [idValue]
+    );
+
+    return rows[0];
+  } catch (error) {
+    console.log("userFinderById ERROR", error);
   }
 }
 
-module.exports = { findUserByUsername };
+module.exports = { findUserByUsername, findUserById };
