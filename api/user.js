@@ -8,8 +8,8 @@ const { findUserByUsername } = require("../db/userFinder");
 // TODO: REGISTER NEW USER HERE
 
 usersRouter.post("/register", async (req, res) => {
-  const { firstName, lastName, username, password } = req.body;
-  
+  const { firstName, lastName, username, password, email } = req.body;
+  console.log(req.body, "34234234234234234")
   try {
     //? this below checks if the username already exists
     const _user = await findUserByUsername(username)
@@ -18,12 +18,12 @@ usersRouter.post("/register", async (req, res) => {
       firstName,
       lastName,
       username,
-      password
+      password,
+      email
     });
     const token = jwt.sign(
       {
-        id: user.id,
-        username,
+        username
       },
       process.env.JWT_SECRET,
       { expiresIn: "1w" }
