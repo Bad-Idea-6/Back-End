@@ -13,26 +13,27 @@ usersRouter.post("/register", async (req, res) => {
   try {
     //? this below checks if the username already exists
     const _user = await findUserByUsername(username)
-  if (!_user){  
-    const user = await createNewUser({
-      firstName,
-      lastName,
-      username,
-      password,
-      email
-    });
-    const token = jwt.sign(
-      {
-        username
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "1w" }
-    );
-    res.send({
-      message: "Thank you for joining the Bad Idea Cult.",
-      token,
-    });}
-    else{
+    if (!_user) {
+      const user = await createNewUser({
+        firstName,
+        lastName,
+        username,
+        password,
+        email
+      });
+      const token = jwt.sign(
+        {
+          username
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "1w" }
+      );
+      res.send({
+        message: "Thank you for joining the Bad Idea Cult.",
+        token,
+      });
+    }
+    else {
       res.send("username already un use. please try again ")
     }
   } catch (error) {
@@ -42,7 +43,7 @@ usersRouter.post("/register", async (req, res) => {
 
 
 // TODO: LOGIN AN EXISTING USER
-usersRouter.get("/login", async (req, res) => {
+usersRouter.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
     const testedUsername = await findUserByUsername(username);
@@ -51,21 +52,28 @@ usersRouter.get("/login", async (req, res) => {
       testedUsername.username == username &&
       testedUsername.password == password
     ) {
-        const token = jwt.sign(
-            {
-                id: testedUsername.id,
-                username
-            },
-            
-                process.env.JWT_SECRET,
-                    {expiresIn: "1w"}
-            
-        )
+      const token = jwt.sign(
+        {
+          id: testedUsername.id,
+          username
+        },
+
+        process.env.JWT_SECRET,
+        { expiresIn: "1w" }
+
+      )
 
       res.send({
         message: "you have logged in!!!",
-        token,
+        token, success: true
       });
+    }
+    else {
+      res.send({
+        message: "you have NOT logged in!!!",
+        token: null, success: false
+      });
+
     }
   } catch (error) {
     console.log("error during login sequence api/user.js", error);
