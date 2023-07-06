@@ -3,7 +3,7 @@ const usersRouter = express.Router();
 const jwt = require("jsonwebtoken");
 
 const { createNewUser } = require("../db/users");
-const { findUserByUsername } = require("../db/userFinder");
+const { findUserByUsername, findUserById } = require("../db/userFinder");
 
 // TODO: REGISTER NEW USER HERE
 
@@ -65,7 +65,8 @@ usersRouter.post("/login", async (req, res) => {
 
       res.send({
         message: "you have logged in!!!",
-        token, success: true
+        token, success: true,
+        id:testedUsername.userId
       });
     }
     else {
@@ -79,5 +80,25 @@ usersRouter.post("/login", async (req, res) => {
     console.log("error during login sequence api/user.js", error);
   }
 });
+
+usersRouter.post("/profile", async(req, res)=>{
+  console.log("entered into profile")
+  try {
+    console.log(id)
+    const {id} = req.body;
+    const user = findUserById(id)
+    console.log(user)
+    if (user){
+      console.log("well that worked ish???")
+      res.send(
+        user
+      )
+    }
+
+
+  } catch (error) {
+    
+  }
+})
 
 module.exports = usersRouter;
