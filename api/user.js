@@ -1,6 +1,7 @@
 const express = require("express");
 const usersRouter = express.Router();
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const { createNewUser } = require("../db/users");
 const { findUserByUsername, findUserById } = require("../db/userFinder");
@@ -14,13 +15,17 @@ usersRouter.post("/register", async (req, res) => {
     //? this below checks if the username already exists
     const _user = await findUserByUsername(username)
     if (!_user) {
+      const saltRound = await bcrypt.genSalt(8)
+      const myHashedPassword = await bcrypt.hash(password, saltRound)
+      console.log(myHashedPassword, "myhashedpassword")
       const user = await createNewUser({
         firstName,
         lastName,
         username,
-        password,
+        password: myHashedPassword,
         email
       });
+
       const token = jwt.sign(
         {
           username
@@ -50,7 +55,7 @@ usersRouter.post("/login", async (req, res) => {
     // console.log("test 2",testedUsername)
     if (
       testedUsername.username == username &&
-      testedUsername.password == password
+      bcrypt.compare(password, testedUsername.password)
     ) {
       const token = jwt.sign(
         {
@@ -62,14 +67,16 @@ usersRouter.post("/login", async (req, res) => {
         { expiresIn: "1w" }
 
       )
-
+console.log("you made it here! line 70")
       res.send({
         message: "you have logged in!!!",
         token, success: true,
-        id:testedUsername.userId
+        id:testedUsername.userId,
+        is_admin: testedUsername.is_admin
       });
     }
     else {
+      console.log("line 78")
       res.send({
         message: "you have NOT logged in!!!",
         token: null, success: false
