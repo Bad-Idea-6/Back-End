@@ -1,4 +1,4 @@
-
+const passwordHasher = require("./passwordHasher");
 const client = require("./client");
 require('dotenv').config();
 
@@ -40,7 +40,7 @@ async function createTableUsers(){
             "firstName" VARCHAR(255) NOT NULL,
             "lastName" VARCHAR(225) NOT NULL,
             username VARCHAR(255) NOT NULL UNIQUE,
-            "password" VARCHAR(15) NOT NULL,
+            "password" VARCHAR(255) NOT NULL,
             email VARCHAR(225),
             "is_admin" BOOLEAN 
         );
@@ -100,27 +100,27 @@ async function buildOutTheDatabase(){
             // USER SEED DATA
             const [firstName, lastName, username, password, is_admin] = process.env.admin.split(",")
             console.log(firstName, lastName, username, password, is_admin, "@@@@@")
-            const admin = await createNewUser({firstName, lastName, username, password, is_admin})
-            
+            const admin = await createNewUser({firstName, lastName, username, password: await passwordHasher(password), is_admin})
+        console.log(await passwordHasher("password"), "yeahhhhh")
             const firstUser = await createNewUser({
                 firstName: "aldolfo",
                 lastName: "freddy",
                 username: "aldofreddy",
-                password: "password1"
+                password: await passwordHasher("password1")
             })
             
             console.log(firstUser)
             const firstUser1 = await createNewUser({
-                firstName: "aldolfo",
+                firstName: "Dave",
                 lastName: "freddy",
-                username: "aldofreddy1",
-                password: "password1"
+                username: "angryDave",
+                password: await passwordHasher("password1")
             })
             const firstUser2 = await createNewUser({
-                firstName: "aldolfo",
+                firstName: "Nick",
                 lastName: "freddy",
-                username: "aldofreddy2",
-                password: "password1"
+                username: "lil_nick",
+                password: await passwordHasher("password1")
             })
             console.log("got through the users")
       
