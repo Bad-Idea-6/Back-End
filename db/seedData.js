@@ -42,7 +42,7 @@ async function createTableUsers(){
             username VARCHAR(255) NOT NULL UNIQUE,
             "password" VARCHAR(255) NOT NULL,
             email VARCHAR(225),
-            "is_admin" BOOLEAN 
+            "is_admin" BOOLEAN DEFAULT false
         );
         `)
         console.log("finished creating users table")
@@ -98,7 +98,7 @@ async function buildOutTheDatabase(){
         })
         console.log(" got through the reviews ")
             // USER SEED DATA
-            const [firstName, lastName, username, password, is_admin] = process.env.admin.split(",")
+            const [firstName, lastName, username, password, is_admin=true] = process.env.admin.split(",")
             console.log(firstName, lastName, username, password, is_admin, "@@@@@")
             const admin = await createNewUser({firstName, lastName, username, password: await passwordHasher(password), is_admin})
         console.log(await passwordHasher("password"), "yeahhhhh")

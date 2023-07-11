@@ -39,22 +39,25 @@ async function fetchReviewById(reviewIdValue){
     }
 }
 
-async function updateReviewById(title, ideaName, review, rating){
-    try{
-        const {rows} = await client.query(`
-        UPDATE reviews
-        SET title = $1
-        SET ideaName = $2
-        SET review = $3
-        SET rating = $4
-        ;
-        `,[title, ideaName, review, rating])
-            if (rows.length){
-                return rows[0];
-            }
-    } catch (error){
-        console.log(error, "update Review by Id")
+async function updateReviewById(id, fields){
+    const arrayOfKeys = Object.keys(fields);
+    const mapOfSetStringNames = arrayOfKeys.map((key, index) => {
+      return `"${key}"=$${index + 1}`;
+    });
+    const setString = mapOfSetStringNames.join(", ");
+    if (setString.length === 0) {
+      return;
     }
+  try {
+    const { rows } = await client.query(`
+    UPDATE reviews
+    SET ${setString}
+    WHERE "reviewId" = ${id}
+    RETURNING *;`,Object.values(fields));
+    return rows[0];
+  } catch (error) {
+    console.log("done did screwed updid", error);
+  }
 }
 
 async function deleteReviewById(reviewIdValue){
