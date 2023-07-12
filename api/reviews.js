@@ -53,9 +53,10 @@ reviewsRouter.post("/singlePost", async (req, res)=>{
 })
 
 reviewsRouter.patch("/editPost", async(req, res)=>{
+  console.log("made it into the patch request")
   const {id, ideaName, title, author, review, rating}= req.body
   const fields = {}
-
+  console.log( id,"saedrfxghdfdghdgfhsa")
   if (ideaName){
     fields.ideaName = ideaName
   }
@@ -83,6 +84,6 @@ res.send({
   message: "review update was successful"
 })
   }
-})
+}) 
 
 module.exports = reviewsRouter;
