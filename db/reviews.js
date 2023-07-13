@@ -3,12 +3,12 @@ const client = require("./client")
 async function createNewReviews(reviewObj){
     try {
         const {rows} = await client.query(`
-            INSERT INTO reviews("ideaName", title, author, review, rating)
-            VALUES ($1, $2, $3, $4, $5)
+            INSERT INTO reviews("ideaName", title, author, review, rating, "imgURL")
+            VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING *;`
-            ,[reviewObj.ideaName, reviewObj.title, reviewObj.author, reviewObj.review, reviewObj.rating])
-
-            return rows
+            ,[reviewObj.ideaName, reviewObj.title, reviewObj.author, reviewObj.review, reviewObj.rating, reviewObj.imgURL])
+            console.log(rows, "tri")
+            return rows[0]
     } catch (error) {
         console.log(" error creating review", error )
     }

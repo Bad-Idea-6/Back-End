@@ -2,7 +2,8 @@ const express = require("express");
 const reviewsRouter = express.Router();
 const { fetchAllReviews } = require("../db/reviews");
 const {createNewReviews, updateReviewById} = require("../db/reviews")
-const {findReviewById} = require("../db/reviewFinder")
+const {findReviewById} = require("../db/reviewFinder");
+const { requireUser } = require("./apiUtils");
 
 
 reviewsRouter.get("/", async (request, response) => {
@@ -18,25 +19,27 @@ reviewsRouter.get("/", async (request, response) => {
       response.send("No reviews were found");
     }
   } catch (error) {
-    throw error;
+    next(error);
   }
 });
 
-reviewsRouter.post("/post", async (req, res)=>{
-  console.log(" entered into reviews Router", req)
-  const token = req
-  console.log(token) 
-  const {ideaName, title, author, review, rating} = req.body
-  try {
- const newReview = createNewReviews({
+reviewsRouter.post("/post", requireUser, async (req, res)=>{
+  const {ideaName, title, author, review, rating, imgURL} = req.body
+   try {
+    if(!ideaName || !title || !author || !review || !rating || !imgURL){
+      next({name: "Empty Field",
+        message:  "Empty field please fill in all fields"})
+    }
+ const newReview = await createNewReviews({
   ideaName, 
   title, 
   author, 
   review,
-   rating
+   rating,
+   imgURL
   })
 res.send({
-  message: "you posted something successfully"
+ newReview
 })
   
 } catch (error) {
@@ -52,7 +55,7 @@ reviewsRouter.post("/singlePost", async (req, res)=>{
   res.send(await findReviewById(id))
 })
 
-reviewsRouter.patch("/editPost", async(req, res)=>{
+reviewsRouter.patch("/editPost", requireUser, async(req, res)=>{
   console.log("made it into the patch request")
   const {id, ideaName, title, author, review, rating}= req.body
   const fields = {}
