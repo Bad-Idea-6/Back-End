@@ -5,7 +5,8 @@ const bcrypt = require("bcrypt");
 
 const { createNewUser, updateUser } = require("../db/users");
 const { findUserByUsername, findUserById } = require("../db/userFinder");
-const passwordHasher = require("../db/passwordHasher")
+const passwordHasher = require("../db/passwordHasher");
+const { requireUser } = require("./apiUtils");
 
 // TODO: REGISTER NEW USER HERE
 
@@ -56,9 +57,11 @@ usersRouter.post("/login", async (req, res) => {
       testedUsername.username == username &&
       bcrypt.compare(password, testedUsername.password)
     ) {
+      console.log(testedUsername.userId, "AHHHHHH")
       const token = jwt.sign(
+
         {
-          id: testedUsername.id,
+          id: testedUsername.userId,
           username,
         },
 
@@ -97,7 +100,7 @@ usersRouter.post("/profile", async (req, res) => {
   } catch (error) {}
 });
 
-usersRouter.patch("/update-user", async (req, res) => {
+usersRouter.patch("/update-user", requireUser, async (req, res) => {
   try {
     const { id, firstName, lastName, username, password, email } = req.body;
 const fields= {}
