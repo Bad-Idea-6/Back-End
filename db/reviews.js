@@ -7,7 +7,6 @@ async function createNewReviews(reviewObj){
             VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING *;`
             ,[reviewObj.ideaName, reviewObj.title, reviewObj.author, reviewObj.review, reviewObj.rating, reviewObj.imgURL])
-            console.log(rows, "tri")
             return rows[0]
     } catch (error) {
         console.log(" error creating review", error )

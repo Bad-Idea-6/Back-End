@@ -10,7 +10,6 @@ async function createNewUser({
 }) {
   try {
 
-console.log(typeof is_admin, "is admin??????")
     if (is_admin!== true && is_admin !== false){
         is_admin = false
     }

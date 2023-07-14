@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "start-dev": "nodemon index.js",
-    "seed": "node ./db/seed.js",
+    "seed": "node ./db/seed/seed.js",
     "seed-dev": "nodemon ./db/seed.js"
   },
   "keywords": [],
