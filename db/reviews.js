@@ -78,4 +78,31 @@ try {
 }
 }
 
-module.exports = { createNewReviews, fetchAllReviews, fetchReviewById, updateReviewById,deleteReviewById}
+async function reportReview(idValue){
+    try {
+        const {rows} = await client.query(`
+        UPDATE reviews
+        SET reported = true
+        WHERE "reviewId" = $1
+        RETURNING*;
+        `, [idValue])
+            return (rows[0])
+    } catch (error) {
+        console.log(error)
+    }
+}
+async function resolveReport(idValue){
+    try {
+        const {rows} = await client.query(`
+        UPDATE reviews
+        SET reported = false
+        WHERE "reviewId" = $1
+        RETURNING*;
+        `, [idValue])
+            return (rows[0])
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+module.exports = { createNewReviews, fetchAllReviews, fetchReviewById, updateReviewById,deleteReviewById, reportReview, resolveReport}

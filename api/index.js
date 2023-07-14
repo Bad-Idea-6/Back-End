@@ -8,6 +8,9 @@ router.use(async (req, res, next) => {
   const prefix = "Bearer ";
   const auth = req.header("Authorization");
 
+  //TODO: AUTHORIZE THE USER 
+  // this creates a req.user object from the token (if present) to be pulled from the req element
+
   if (!auth) {
     console.log("no auth")
     next();
@@ -34,13 +37,18 @@ console.log("line 13")
   }
 });
 
+// ! ROUTE TO CHECK THE API IS CONNECTED 
+
 router.get('/health', (request, response)=>{
   response.send('I am up and healthy')
 })
 
+  // TODO: routes to the different api components
+
 router.use('/reviews', require('./apiReviews'))
 router.use('/user', require('./apiUser'))
 router.use('/messages', require("./apiMessages"))
+router.use('/delete', require("./apiDelete"))
 
 
 
