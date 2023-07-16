@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const {findUserById} = require("../db/userFinder");
-const { requireUser } = require('./apiUtils');
+const { requireUser, requireAdmin } = require('./apiUtils');
 
 router.use(async (req, res, next) => {
   const prefix = "Bearer ";
@@ -16,13 +16,11 @@ router.use(async (req, res, next) => {
     next();
   } else if (auth.startsWith(prefix)) {
     const token = auth.slice(prefix.length);
-console.log("line 13")
     try {
       const { id } = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("Our user Id:-----", id);
+
       if (id) {
         req.user = await findUserById(id);
-        console.log(req.user, "line 21")
         next();
       }
     } catch (error) {
@@ -49,6 +47,7 @@ router.use('/reviews', require('./apiReviews'))
 router.use('/user', require('./apiUser'))
 router.use('/messages', require("./apiMessages"))
 router.use('/delete', require("./apiDelete"))
+router.use('/admin',requireAdmin, require("./apiAdmin"))
 
 
 

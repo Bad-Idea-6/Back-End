@@ -49,6 +49,7 @@ deleteRouter.delete("/user", requireUser, async (req, res, next)=>{
     // ? check if userToBeDeleted'sId belongs to the user or user is admin 
     const {is_admin, userId} = req.user
     const {userInQuestionId} = req.body
+    console.log(userInQuestionId, "35135410358410")
     try {
         if (userId === userInQuestionId || is_admin){
             (console.log("you can totaly delete this person"))

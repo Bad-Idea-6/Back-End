@@ -53,4 +53,33 @@ console.log(setString)
     console.log("done did screwed updid", error);
   }
 }
-module.exports = { createNewUser, updateUser };
+
+
+async function getAllUsers(){
+try {
+  const {rows} = await client.query(`
+  SELECT * FROM users
+  ;
+  `)
+  return rows
+} catch (error) {
+  console.log("error with getAllUsers", error)
+}
+}
+
+async function createAdmin(adminId){
+  try {
+    const {rows} = await client.query(`
+    UPDATE users
+    SET is_admin = true
+    WHERE "userId" = $1
+    RETURNING*;
+    `,[adminId])
+    return rows[0]
+  } catch (error) {
+    console.log("error with getAllUsers", error)
+  }
+}
+
+
+module.exports = { createNewUser, updateUser, getAllUsers, createAdmin };
