@@ -1,7 +1,7 @@
 const express = require("express");
 const reviewsRouter = express.Router();
 const { fetchAllReviews } = require("../db/reviews");
-const {createNewReviews, updateReviewById} = require("../db/reviews")
+const {createNewReviews, updateReviewById, reportReview, resolveReport} = require("../db/reviews")
 const {findReviewById} = require("../db/reviewFinder");
 const { requireUser } = require("./apiUtils");
 
@@ -88,5 +88,49 @@ res.send({
 })
   }
 }) 
+
+
+//? REPORTING TOOLS
+
+
+reviewsRouter.post("/report", requireUser, async (req, res, next)=>{
+  const {userId} = req.user
+  const {reviewId} = req.body
+  try {
+    if (userId && reviewId) {
+      reportReview(reviewId)
+      res.send({
+        message: "An admin will review this report shortly"
+      })
+    }
+    else{
+      res.send({
+        message: "Missing information, could not report post at this time"
+      })
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
+reviewsRouter.post("/admin-resolve-report", requireUser, async (req, res, next)=>{
+  const {is_admin} = req.user
+  const {reviewId} = req.body
+  try {
+    if (is_admin && reviewId) {
+      resolveReport(reviewId)
+      res.send({
+        message: "An admin will review this report shortly"
+      })
+    }
+    else{
+      res.send({
+        message: "Missing information, could not report post at this time"
+      })
+    }
+  } catch (error) {
+    next(error)
+  }
+})
 
 module.exports = reviewsRouter;

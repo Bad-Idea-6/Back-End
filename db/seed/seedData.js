@@ -15,7 +15,8 @@ async function createTableReviews() {
             author VARCHAR(225) DEFAULT 'anonymous',
             review TEXT DEFAULT 'review TBD',
             "imgURL" TEXT DEFAULT 'https://2.bp.blogspot.com/_4Buev2eybnY/S4fYsbTHigI/AAAAAAAAGrk/5GqA1kKMPC4/s280/hot+dog+news.jpg',
-            rating INT NOT NULL 
+            rating INT NOT NULL,
+            reported BOOLEAN DEFAULT false
         );
         `)
     } catch (error) {

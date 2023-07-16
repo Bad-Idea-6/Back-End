@@ -22,4 +22,16 @@ async function createMessage(
 
 }
 
-module.exports = {createMessage}
+async function fetchAllMessages(){
+    try{
+        const {rows} = await client.query(`
+        SELECT * FROM messages
+        ;
+        `)
+        return rows
+    } catch (error){
+        console.log(error, "Fetch all from reviews")
+    }
+}
+
+module.exports = {createMessage, fetchAllMessages}

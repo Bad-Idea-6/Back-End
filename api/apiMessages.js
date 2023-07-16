@@ -2,7 +2,7 @@ const express = require("express");
 const { route } = require("./apiReviews");
 const { requireUser } = require("./apiUtils");
 const router = express.Router();
-const { createMessage } = require("../db/messages")
+const { createMessage, fetchAllMessages } = require("../db/messages")
 
 router.post("/", requireUser, async (req, res) => {
     const { userId, userName } = req.user
@@ -27,6 +27,24 @@ router.post("/", requireUser, async (req, res) => {
 
     }
     res.send({ message: "random" })
+})
+router.get("/allMessages", async (req, res)=>{
+    const {reviewId} = req.body
+    try {
+        if(reviewId){
+            const allComments = await fetchAllMessages()
+            allComments.map((comment)=>{
+                if(comment.reviewId = reviewId){
+                    return comment
+                }
+            })
+            console.log(allComments)
+            res.send(allComments)
+        }
+    } catch (error) {
+        console.log("error getting all messages", error)
+    }
+    
 })
 
 module.exports = router;
