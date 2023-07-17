@@ -28,8 +28,8 @@ router.post("/", requireUser, async (req, res) => {
     }
     res.send({ message: "random" })
 })
-router.get("/allMessages", async (req, res)=>{
-    const {reviewId} = req.body
+router.get("/all-messages/:id", async (req, res)=>{
+    const reviewId = req.params.id
     try {
         if(reviewId){
             const allComments = await fetchAllMessages()
@@ -41,6 +41,9 @@ router.get("/allMessages", async (req, res)=>{
             console.log(allComments)
             res.send(allComments)
         }
+        else{res.send({
+            message:"No messages found"
+        })}
     } catch (error) {
         console.log("error getting all messages", error)
     }
