@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const {findUserById} = require("../db/userFinder");
+const {findUserById, findUserByUsername} = require("../db/userFinder");
 const { requireUser, requireAdmin } = require('./apiUtils');
 
 router.use(async (req, res, next) => {
@@ -10,17 +10,20 @@ router.use(async (req, res, next) => {
 
   //TODO: AUTHORIZE THE USER 
   // this creates a req.user object from the token (if present) to be pulled from the req element
-
+console.log("token",auth)
   if (!auth) {
+    
     console.log("no auth")
     next();
   } else if (auth.startsWith(prefix)) {
     const token = auth.slice(prefix.length);
+    console.log("line20", token)
     try {
-      const { id } = jwt.verify(token, process.env.JWT_SECRET);
-
-      if (id) {
-        req.user = await findUserById(id);
+      const verifyToken = jwt.verify(token, process.env.JWT_SECRET);
+        console.log("line 23",verifyToken)
+      if (verifyToken.username) {
+        req.user = await findUserByUsername(verifyToken.username);
+  
         next();
       }
     } catch (error) {
@@ -34,6 +37,8 @@ router.use(async (req, res, next) => {
     });
   }
 });
+router.use((req, res,next)=> {console.log("hi there") 
+next()})
 
 // ! ROUTE TO CHECK THE API IS CONNECTED 
 
