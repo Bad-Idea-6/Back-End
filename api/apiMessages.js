@@ -32,14 +32,15 @@ router.get("/all-messages/:id", async (req, res)=>{
     const reviewId = req.params.id
     try {
         if(reviewId){
+            const totalComments = [];
             const allComments = await fetchAllMessages()
             allComments.map((comment)=>{
-                if(comment.reviewId = reviewId){
-                    return comment
+                if(comment.reviewId == reviewId){
+                    totalComments.push(comment)
                 }
             })
-            console.log(allComments)
-            res.send(allComments)
+            console.log(totalComments)
+            res.send(totalComments)
         }
         else{res.send({
             message:"No messages found"
