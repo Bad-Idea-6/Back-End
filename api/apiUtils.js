@@ -1,11 +1,13 @@
 function requireUser(req, res, next) {
+    console.log("beginning authorization prosess")
+    
     if (!req.user) {
         next({
             name: "MissingUserError",
             message: "You must be logged in to perform this action",
         });
     }
-
+    console.log("made it through require user")
     next();
 }
 function requireAdmin(req, res, next) {

@@ -27,15 +27,15 @@ usersRouter.post("/register", async (req, res) => {
         password: myHashedPassword,
         email,
       });
-
       const token = jwt.sign(
         {
           username,
         },
         process.env.JWT_SECRET,
-        { expiresIn: "1w" }
-      );
+        { expiresIn: "1w" } 
+        );
       res.send({
+        userInfo:user[0],
         message: "Thank you for joining the Bad Idea Cult.",
         token,
       });
@@ -75,6 +75,7 @@ usersRouter.post("/login", async (req, res) => {
         success: true,
         id: testedUsername.userId,
         is_admin: testedUsername.is_admin,
+        username: testedUsername.username
       });
     } else {
       console.log("line 78");
