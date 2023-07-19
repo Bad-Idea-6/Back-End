@@ -149,12 +149,30 @@ async function fillTheDatabase() {
         //TODO THERE NEEDS TO BE 2 COMMENTS FOR EVERY ONE POST
 
         const firstMessage = await createMessage({
-            message: "admin",
-            title: "password",
-            author: "yyyy",
+            message: "If you tried that in my hometown, you'd be thrown in the iron maiden. This is a bad idea!",
+            title: "You're wrong!",
+            author: "aldofreddy",
             reviewId: 1,
-            rating: 2,
+            rating: 1,
+            userId: 2
+        })
+
+        const secondMessage = await createMessage({
+            message: "The vegan teacher should be shot out of a cannon",
+            title: "Hell no!",
+            author: "angryDave",
+            reviewId: 1,
+            rating: 1,
             userId: 3
+        })
+
+        const thirdMessage = await createMessage({
+            message: "I am also a dentist and this idea would cost me business.",
+            title: "You're not very fun",
+            author: "lil_nick",
+            reviewId: 1,
+            rating: 1,
+            userId: 4
         })
 
         console.log("got through comments")
