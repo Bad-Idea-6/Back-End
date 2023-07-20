@@ -5,11 +5,15 @@ const {deleteReviewById, deleteUserById, deleteCommentById} = require("../db/del
 
 
 deleteRouter.delete("/review", requireUser, async (req, res, next)=>{
+    console.log("lets do this")
     // ? check if review id belongs to user or user is admin 
     const {is_admin, userId} = req.user
     const {reviewOwnerId, reviewId} = req.body
+    console.log(req.body)
+
+    console.log(is_admin,userId, reviewOwnerId, reviewId,"AAAAAAAAAAAAAAA")
     try {
-        if (userId === reviewOwnerId || is_admin){
+        if (userId || is_admin){
             deleteReviewById(reviewId)
             res.send({
                 message: "you have successfully deleted a post"
@@ -21,7 +25,7 @@ deleteRouter.delete("/review", requireUser, async (req, res, next)=>{
             })
         }
     } catch (error) {
-        next(error);
+        next(error); 
     }
 })
 deleteRouter.delete("/comment", requireUser, async (req, res, next)=>{
