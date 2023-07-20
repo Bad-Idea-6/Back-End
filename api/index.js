@@ -52,7 +52,7 @@ router.use('/reviews', require('./apiReviews'))
 router.use('/user', require('./apiUser'))
 router.use('/messages', require("./apiMessages"))
 router.use('/delete', require("./apiDelete"))
-router.use('/admin',requireAdmin, require("./apiAdmin"))
+router.use('/admin',requireUser, require("./apiAdmin"))
 
 
 

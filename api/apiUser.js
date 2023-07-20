@@ -12,14 +12,12 @@ const { requireUser } = require("./apiUtils");
 
 usersRouter.post("/register", async (req, res) => {
   const { firstName, lastName, username, password, email } = req.body;
-  console.log(req.body, "34234234234234234");
   try {
     //? this below checks if the username already exists
     const _user = await findUserByUsername(username);
     if (!_user) {
       const saltRound = await bcrypt.genSalt(8);
       const myHashedPassword = await bcrypt.hash(password, saltRound);
-      console.log(myHashedPassword, "myhashedpassword");
       const user = await createNewUser({
         firstName,
         lastName,
@@ -32,10 +30,10 @@ usersRouter.post("/register", async (req, res) => {
           username,
         },
         process.env.JWT_SECRET,
-        { expiresIn: "1w" } 
-        );
+        { expiresIn: "1w" }
+      );
       res.send({
-        userInfo:user[0],
+        userInfo: user[0],
         message: "Thank you for joining the Bad Idea Cult.",
         token,
       });
@@ -52,14 +50,11 @@ usersRouter.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
     const testedUsername = await findUserByUsername(username);
-    // console.log("test 2",testedUsername)
     if (
       testedUsername.username == username &&
       bcrypt.compare(password, testedUsername.password)
     ) {
-      console.log(testedUsername.userId, "AHHHHHH")
       const token = jwt.sign(
-
         {
           id: testedUsername.userId,
           username,
@@ -68,17 +63,15 @@ usersRouter.post("/login", async (req, res) => {
         process.env.JWT_SECRET,
         { expiresIn: "1w" }
       );
-      console.log("you made it here! line 70");
       res.send({
         message: "you have logged in!!!",
         token,
         success: true,
         id: testedUsername.userId,
         is_admin: testedUsername.is_admin,
-        username: testedUsername.username
+        username: testedUsername.username,
       });
     } else {
-      console.log("line 78");
       res.send({
         message: "you have NOT logged in!!!",
         token: null,
@@ -94,7 +87,6 @@ usersRouter.post("/profile", async (req, res) => {
   try {
     const { id } = req.body;
     const user = await findUserById(id);
-    console.log(user);
     if (user) {
       res.send(user);
     }
@@ -104,31 +96,28 @@ usersRouter.post("/profile", async (req, res) => {
 usersRouter.patch("/update-user", requireUser, async (req, res) => {
   try {
     const { id, firstName, lastName, username, password, email } = req.body;
-const fields= {}
-if(firstName){
-  fields.firstName = firstName
-}
-if(lastName){
-  fields.lastName = lastName
-}
-if(username){
-  fields.username = username
-}
-if(password){
-  const hashedPassword = await passwordHasher(password)
-  fields.password = hashedPassword
-}
-if(email){
-  fields.email = email
-}
-
-console.log(fields)
+    const fields = {};
+    if (firstName) {
+      fields.firstName = firstName;
+    }
+    if (lastName) {
+      fields.lastName = lastName;
+    }
+    if (username) {
+      fields.username = username;
+    }
+    if (password) {
+      const hashedPassword = await passwordHasher(password);
+      fields.password = hashedPassword;
+    }
+    if (email) {
+      fields.email = email;
+    }
 
     const updatedUser = await updateUser(id, fields);
-   console.log("got through the function")
-    res.send(updatedUser)
+    res.send(updatedUser);
   } catch (error) {
-    console.log("userRouter.Patch error", error)
+    console.log("userRouter.Patch error", error);
   }
 });
 
