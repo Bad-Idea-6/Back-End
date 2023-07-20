@@ -1,7 +1,8 @@
 const express = require("express");
 const adminRouter = express.Router();
 const {getAllUsers, createAdmin} = require("../db/users")
-const {resolveReport} = require("../db/reviews")
+const {resolveReport} = require("../db/reviews");
+const { requireAdmin } = require("./apiUtils");
 
 adminRouter.get("/all-users", async (_, res)=>{
 try {
@@ -14,7 +15,7 @@ try {
 }
 })
 
-adminRouter.patch("/make-admin", async (req, res, next)=>{
+adminRouter.patch("/make-admin", requireAdmin, async (req, res, next)=>{
     const {adminId} = req.body
     console.log("things are going down", adminId)
     try {
@@ -28,7 +29,7 @@ adminRouter.patch("/make-admin", async (req, res, next)=>{
     }
 })
 
-adminRouter.patch("/resolve-report", async (req, res, next)=>{
+adminRouter.patch("/resolve-report", requireAdmin, async (req, res, next)=>{
     const {reviewId} = req.body
     try {
         await resolveReport(reviewId)
