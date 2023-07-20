@@ -6,7 +6,7 @@ const {findReviewById} = require("../db/reviewFinder");
 const { requireUser } = require("./apiUtils");
 
 
-reviewsRouter.get("/", async (request, response) => {
+reviewsRouter.get("/", async (request, response, next) => {
   try {
     const allReviews = await fetchAllReviews();
 
@@ -23,10 +23,12 @@ reviewsRouter.get("/", async (request, response) => {
   }
 });
 
-reviewsRouter.post("/post", requireUser, async (req, res)=>{
-  const {ideaName, title, author, review, rating, imgURL} = req.body
+reviewsRouter.post("/post", requireUser, async (req, res, next)=>{
+  const {ideaName, title, review, rating} = req.body
+  const author = req.user.username
+  console.log(author)
    try {
-    if(!ideaName || !title || !author || !review || !rating || !imgURL){
+    if(!ideaName || !title || !author || !review || !rating ){
       next({name: "Empty Field",
         message:  "Empty field please fill in all fields"})
     }
@@ -36,10 +38,9 @@ reviewsRouter.post("/post", requireUser, async (req, res)=>{
   author, 
   review,
    rating,
-   imgURL
   })
 res.send({
- newReview
+message: "You have sent a post"
 })
   
 } catch (error) {
@@ -93,9 +94,10 @@ res.send({
 //? REPORTING TOOLS
 
 
-reviewsRouter.post("/report", requireUser, async (req, res, next)=>{
+reviewsRouter.post("/report/:id", requireUser, async (req, res, next)=>{
   const {userId} = req.user
-  const {reviewId} = req.body
+  const reviewId = req.params.id
+  console.log(userId, reviewId)
   try {
     if (userId && reviewId) {
       reportReview(reviewId)

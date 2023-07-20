@@ -10,7 +10,7 @@ router.use(async (req, res, next) => {
 
   //TODO: AUTHORIZE THE USER 
   // this creates a req.user object from the token (if present) to be pulled from the req element
-console.log("token",auth)
+console.log("token",auth, "is this the token bearer?")
   if (!auth) {
     
     console.log("no auth")
